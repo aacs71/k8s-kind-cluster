@@ -1,0 +1,15 @@
+resources:
+  - ./reference
+patches:
+  - path: ./config-deployment-metrics.yaml
+    target:
+      version: v1
+      kind: Deployment
+      name: ingress-nginx-controller
+      namespace: ingress-nginx 
+  - path: ./config-service-metrics.yaml
+    target:
+      version: v1
+      kind: Service
+      name: ingress-nginx-controller
+      namespace: ingress-nginx  

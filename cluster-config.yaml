@@ -1,0 +1,31 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  podSubnet: "10.0.0.0/12"
+  serviceSubnet: "10.2.0.0/12"
+  disableDefaultCNI: true # vamos usar o calico
+  # ----
+  # apiServerAddress: "127.0.0.1"
+  # apiServerPort: 6443
+  # ----
+nodes:
+- role: control-plane
+  image: kindest/node:v1.26.3@sha256:61b92f38dff6ccc29969e7aa154d34e38b89443af1a2c14e6cfbd2df6419c66f
+  kubeadmConfigPatches: # enable ingress controllers
+  - |
+    kind: InitConfiguration
+    nodeRegistration:
+      kubeletExtraArgs:
+        node-labels: "ingress-ready=true"
+  extraPortMappings:
+  - containerPort: 80
+    hostPort: 80
+    protocol: TCP
+  - containerPort: 443
+    hostPort: 443
+    protocol: TCP
+  # extraMounts:
+  # - hostPath: /Work/K8sKind
+  #   containerPath: /host-volume    
+- role: worker
+- role: worker
